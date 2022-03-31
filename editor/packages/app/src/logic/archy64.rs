@@ -47,11 +47,11 @@ impl Archy64 {
                 }
 
                 if ctx.input.is_key_down(VirtualKeyCode::Left) {
-                    stick.x -= 1.0;
+                    stick.x += 1.0;
                 }
 
                 if ctx.input.is_key_down(VirtualKeyCode::Right) {
-                    stick.x += 1.0;
+                    stick.x -= 1.0;
                 }
 
                 let input = MarioInput {

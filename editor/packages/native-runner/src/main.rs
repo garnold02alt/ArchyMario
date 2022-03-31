@@ -17,6 +17,9 @@ fn main() {
         sender.send(FromHost::LoadResource(resource)).unwrap();
     }
 
+    // Mario :)
+    sender.send(FromHost::Mario).unwrap();
+
     let _stdin = AsyncStdin::new(sender);
 
     run(Init {
