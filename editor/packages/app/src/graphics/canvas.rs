@@ -5,7 +5,8 @@ use gpu::{Buffer, Uniform};
 
 use super::{
     structures::{
-        CameraMatrices, GizmoInstance, GroundVertex, LineVertex, SolidVertex, TransformTint,
+        CameraMatrices, GizmoInstance, GroundVertex, LineVertex, MarioVertex, SolidVertex,
+        TransformTint,
     },
     Share,
 };
@@ -88,7 +89,7 @@ pub struct SolidMesh {
 }
 
 pub struct MarioMesh {
-    pub(super) vertices: Buffer<SolidVertex>,
+    pub(super) vertices: Buffer<MarioVertex>,
     pub(super) triangles: Buffer<[u16; 3]>,
 }
 

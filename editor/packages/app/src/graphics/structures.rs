@@ -26,6 +26,14 @@ pub struct SolidVertex {
 
 #[repr(C)]
 #[derive(Clone, Copy)]
+pub struct MarioVertex {
+    pub position: Vector3<f32>,
+    pub normal: Vector3<f32>,
+    pub texcoord: Vector2<f32>,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
 pub struct GroundVertex {
     pub position: Vector3<f32>,
     pub texcoord: Vector2<f32>,
@@ -62,6 +70,9 @@ unsafe impl Pod for LineVertex {}
 
 unsafe impl Zeroable for SolidVertex {}
 unsafe impl Pod for SolidVertex {}
+
+unsafe impl Zeroable for MarioVertex {}
+unsafe impl Pod for MarioVertex {}
 
 unsafe impl Zeroable for GroundVertex {}
 unsafe impl Pod for GroundVertex {}

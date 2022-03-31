@@ -16,7 +16,9 @@ pub use renderer::Renderer;
 
 use loader::ResourceLoader;
 
-use self::structures::{GizmoInstance, GroundVertex, LineVertex, SolidVertex, TransformTint};
+use self::structures::{
+    GizmoInstance, GroundVertex, LineVertex, MarioVertex, SolidVertex, TransformTint,
+};
 
 pub fn init(window: &Window) -> (Renderer, Graphics, ResourceLoader) {
     let (gpu, surface) = gpu::init(window);
@@ -90,7 +92,7 @@ impl Graphics {
     pub fn write_mario_mesh(
         &self,
         mesh: &MarioMesh,
-        vertices: &[SolidVertex],
+        vertices: &[MarioVertex],
         triangles: &[[u16; 3]],
     ) {
         self.gpu.write_buffer(&mesh.vertices, vertices);

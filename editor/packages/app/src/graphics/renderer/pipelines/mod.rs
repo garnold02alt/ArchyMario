@@ -3,6 +3,7 @@ use gpu::{Gpu, Pipeline, Surface};
 mod gizmo;
 mod ground;
 mod line;
+mod mario;
 mod prop;
 mod solid;
 
@@ -12,6 +13,7 @@ pub struct Pipelines {
     pub ground: Pipeline,
     pub prop: Pipeline,
     pub gizmo: Pipeline,
+    pub mario: Pipeline,
 }
 
 impl Pipelines {
@@ -22,6 +24,7 @@ impl Pipelines {
             ground: ground::pipeline(gpu, surface),
             prop: prop::pipeline(gpu, surface),
             gizmo: gizmo::pipeline(gpu, surface),
+            mario: mario::pipeline(gpu, surface),
         }
     }
 }

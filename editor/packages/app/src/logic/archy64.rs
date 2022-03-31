@@ -5,7 +5,7 @@ use instant::{Duration, Instant};
 use libsm64::{LevelTriangle, Mario, MarioInput, Sm64};
 use winit::event::VirtualKeyCode;
 
-use crate::graphics::{structures::SolidVertex, Canvas, Graphics, MarioMesh};
+use crate::graphics::{structures::MarioVertex, Canvas, Graphics, MarioMesh};
 
 use super::input::Input;
 
@@ -70,11 +70,10 @@ impl Archy64 {
 
                     for (i, (a, b, c)) in geometry.triangles().enumerate() {
                         [a, b, c].into_iter().for_each(|v| {
-                            vertices.push(SolidVertex {
-                                position: vec3(v.position.x, v.position.y, v.position.z) * 0.01,
+                            vertices.push(MarioVertex {
+                                position: vec3(v.position.x, v.position.y, v.position.z) / 128.0,
                                 normal: vec3(v.normal.x, v.normal.y, v.normal.z),
                                 texcoord: vec2(v.uv.x, v.uv.y),
-                                tint: [0.0; 4],
                             });
 
                             let t0 = i as u16 * 3;

@@ -156,10 +156,10 @@ impl Logic {
         self.archy64.init(
             graphics,
             &[
-                tri(point(0, 0, 0), point(1000, 0, 1000), point(1000, 0, 0)),
-                tri(point(0, 0, 0), point(0, 0, 1000), point(1000, 0, 1000)),
+                tri(point(0, 0, 0), point(1024, 0, 1024), point(1024, 0, 0)),
+                tri(point(0, 0, 0), point(0, 0, 1024), point(1024, 0, 1024)),
             ],
-            vec3(500, 100, 500),
+            vec3(512, 100, 512),
         );
 
         fn tri(a: Point3<i16>, b: Point3<i16>, c: Point3<i16>) -> LevelTriangle {
