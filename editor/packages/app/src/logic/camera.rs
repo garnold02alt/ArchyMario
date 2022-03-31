@@ -1,7 +1,7 @@
 use asset::scene;
 use cgmath::{
-    perspective, vec2, vec3, Deg, Matrix3, Matrix4, SquareMatrix, Transform, Vector2, Vector3,
-    Vector4, Zero,
+    perspective, vec2, vec3, Deg, Matrix3, Matrix4, Quaternion, Rad, Rotation3, SquareMatrix,
+    Transform, Vector2, Vector3, Vector4, Zero,
 };
 
 use crate::{graphics::structures::CameraMatrices, math::Ray};
@@ -12,6 +12,8 @@ pub struct Camera {
     projection: Matrix4<f32>,
     viewport_size: Vector2<f32>,
     speed: i32,
+    mario_disp: Vector3<f32>,
+    mario_quat: Quaternion<f32>,
 }
 
 impl Default for Camera {
@@ -22,6 +24,8 @@ impl Default for Camera {
             projection: Matrix4::identity(),
             viewport_size: Vector2::zero(),
             speed: 50,
+            mario_disp: Vector3::zero(),
+            mario_quat: Quaternion::new(1.0, 0.0, 0.0, 0.0),
         }
     }
 }
@@ -82,11 +86,38 @@ impl Camera {
         self.speed -= 1;
     }
 
-    pub fn mario_control(&mut self, position: Vector3<f32>, angle: f32) {
-        let disp = Vector3::new(0.0, 4.0, 5.0);
-        self.position = position + disp;
+    pub fn mario_control(&mut self, position: Vector3<f32>, angle: f32, still: bool) {
+        let angle = if angle < 0.0 {
+            angle + std::f32::consts::TAU
+        } else {
+            angle
+        };
+
+        let mario_forward = vec3(angle.sin(), 0.0, angle.cos());
+
         self.rotation.x = -30.0;
+        self.position = position + self.mario_disp;
+
+        if still {
+            let mut rot_target = Quaternion::from_angle_y(Rad(angle - std::f32::consts::PI));
+            self.mario_quat = self.mario_quat.slerp(rot_target, 0.05);
+            self.mario_disp = self.mario_quat * Vector3::unit_z() * 4.0 + vec3(0.0, 4.0, 0.0);
+        }
+
+        fn lerp(a: f32, b: f32, t: f32) -> f32 {
+            a + (b - a) * t
+        }
+
+        fn lerp3(a: Vector3<f32>, b: Vector3<f32>, t: f32) -> Vector3<f32> {
+            a + (b - a) * t
+        }
+    }
+
+    pub fn reset(&mut self) {
+        self.rotation.x = 0.0;
         self.rotation.y = 0.0;
+        self.mario_disp = vec3(0.0, 0.0, 4.0);
+        self.mario_quat = Quaternion::new(1.0, 0.0, 0.0, 0.0);
     }
 
     pub fn screen_ray(&self, coords: Vector2<f32>) -> Ray {
@@ -162,10 +193,10 @@ impl Camera {
     }
 
     fn view_to_world(&self) -> Matrix4<f32> {
+        let mario_rot: Matrix4<f32> = self.mario_quat.into();
         Matrix4::from_translation(self.position)
+            * mario_rot
             * Matrix4::from_angle_y(Deg(self.rotation.y))
             * Matrix4::from_angle_x(Deg(self.rotation.x))
     }
 }
-
-// TODO: Tests

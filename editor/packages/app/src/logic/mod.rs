@@ -159,6 +159,7 @@ impl Logic {
     pub fn start_mario(&mut self, graphics: &Graphics) {
         self.archy64
             .init(graphics, &self.scene.level_geometry(), vec3(0, 512, 0));
+        self.camera.reset();
     }
 
     pub fn render(&self, canvas: &mut Canvas) {
