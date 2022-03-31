@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use asset::{scene, TextureID};
 use cgmath::{Quaternion, Rotation, Vector2, Vector3, Zero};
+use libsm64::LevelTriangle;
 
 use crate::{
     data::PropInfoContainer,
@@ -256,6 +257,16 @@ impl Scene {
     pub fn hollow_of(&self, gfx: &Graphics, id: usize, grid: i32) -> Vec<Solid> {
         let solid = self.solids.get(&id).unwrap();
         solid.make_hollow(gfx, grid).into()
+    }
+
+    pub fn level_geometry(&self) -> Vec<LevelTriangle> {
+        let mut triangles = Vec::with_capacity(self.solids.len() * 12);
+
+        for solid in self.solids.values() {
+            triangles.extend(solid.level_triangles().into_iter().flatten());
+        }
+
+        triangles
     }
 
     pub fn render(&self, canvas: &mut Canvas, mask: ElementKind) {

@@ -153,27 +153,8 @@ impl Logic {
     }
 
     pub fn start_mario(&mut self, graphics: &Graphics) {
-        self.archy64.init(
-            graphics,
-            &[
-                tri(point(0, 0, 0), point(1024, 0, 1024), point(1024, 0, 0)),
-                tri(point(0, 0, 0), point(0, 0, 1024), point(1024, 0, 1024)),
-            ],
-            vec3(512, 100, 512),
-        );
-
-        fn tri(a: Point3<i16>, b: Point3<i16>, c: Point3<i16>) -> LevelTriangle {
-            LevelTriangle {
-                kind: Surface::Default,
-                force: 0,
-                terrain: Terrain::Grass,
-                vertices: (a, b, c),
-            }
-        }
-
-        fn point(x: i16, y: i16, z: i16) -> Point3<i16> {
-            Point3 { x, y, z }
-        }
+        self.archy64
+            .init(graphics, &self.scene.level_geometry(), vec3(0, 512, 0));
     }
 
     pub fn render(&self, canvas: &mut Canvas) {

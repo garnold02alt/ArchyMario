@@ -2,6 +2,7 @@ mod raycast;
 
 use asset::{scene, GizmoID, PropID, TextureID};
 use cgmath::{vec2, vec3, ElementWise, InnerSpace, Matrix4, Quaternion, Transform, Vector3, Zero};
+use libsm64::{LevelTriangle, Point3, Surface, Terrain};
 
 use crate::{
     color,
@@ -230,6 +231,41 @@ impl Solid {
             ),
             Self::new(gfx, min + vec3(0, ext.y - l, ext.z - l), vec3(l, l, l)),
         ]
+    }
+
+    pub fn level_triangles(&self) -> [[LevelTriangle; 2]; 6] {
+        fn tri(a: Point3<i16>, b: Point3<i16>, c: Point3<i16>) -> LevelTriangle {
+            LevelTriangle {
+                kind: Surface::Default,
+                force: 0,
+                terrain: Terrain::Grass,
+                vertices: (a, b, c),
+            }
+        }
+
+        fn point(s: &Solid, i: usize) -> Point3<i16> {
+            let point = s.geometry.points[i].position;
+            Point3 {
+                x: point.x as i16,
+                y: point.y as i16,
+                z: point.z as i16,
+            }
+        }
+
+        [
+            [1, 5, 6, 2],
+            [4, 0, 3, 7],
+            [5, 4, 7, 6],
+            [0, 1, 2, 3],
+            [3, 2, 6, 7],
+            [1, 0, 4, 5],
+        ]
+        .map(|f| {
+            [
+                tri(point(self, f[0]), point(self, f[1]), point(self, f[2])),
+                tri(point(self, f[0]), point(self, f[2]), point(self, f[3])),
+            ]
+        })
     }
 }
 
