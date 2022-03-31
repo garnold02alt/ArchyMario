@@ -54,9 +54,16 @@ impl Archy64 {
                     stick.x -= 1.0;
                 }
 
+                let button_a = ctx.input.is_key_down(VirtualKeyCode::Y);
+                let button_b = ctx.input.is_key_down(VirtualKeyCode::X);
+                let button_z = ctx.input.is_key_down(VirtualKeyCode::C);
+
                 let input = MarioInput {
                     stick_x: stick.x,
                     stick_y: stick.y,
+                    button_a,
+                    button_b,
+                    button_z,
                     ..Default::default()
                 };
 
