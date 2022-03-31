@@ -190,7 +190,7 @@ pub fn run(init: Init) {
                             loader.push_job(resource);
                         }
                         FromHost::Mario => {
-                            logic.start_mario(&graphics);
+                            logic.start_mario(&graphics, &prop_info);
                         }
                     }
                 }

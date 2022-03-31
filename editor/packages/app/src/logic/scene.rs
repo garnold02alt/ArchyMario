@@ -259,11 +259,15 @@ impl Scene {
         solid.make_hollow(gfx, grid).into()
     }
 
-    pub fn level_geometry(&self) -> Vec<LevelTriangle> {
+    pub fn level_geometry(&self, info: &PropInfoContainer) -> Vec<LevelTriangle> {
         let mut triangles = Vec::with_capacity(self.solids.len() * 12);
 
         for solid in self.solids.values() {
             triangles.extend(solid.level_triangles().into_iter().flatten());
+        }
+
+        for prop in self.props.values() {
+            triangles.extend(prop.level_triangles(info).into_iter().flatten());
         }
 
         triangles

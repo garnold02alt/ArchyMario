@@ -234,24 +234,6 @@ impl Solid {
     }
 
     pub fn level_triangles(&self) -> [[LevelTriangle; 2]; 6] {
-        fn tri(a: Point3<i16>, b: Point3<i16>, c: Point3<i16>) -> LevelTriangle {
-            LevelTriangle {
-                kind: Surface::Default,
-                force: 0,
-                terrain: Terrain::Grass,
-                vertices: (a, b, c),
-            }
-        }
-
-        fn point(s: &Solid, i: usize) -> Point3<i16> {
-            let point = s.geometry.points[i].position;
-            Point3 {
-                x: point.x as i16,
-                y: point.y as i16,
-                z: point.z as i16,
-            }
-        }
-
         [
             [1, 5, 6, 2],
             [4, 0, 3, 7],
@@ -646,6 +628,74 @@ impl Prop {
             }),
         }
     }
+
+    pub fn level_triangles(&self, info: &PropInfoContainer) -> [[LevelTriangle; 2]; 6] {
+        let info = info.get(self.asset).unwrap();
+
+        let min = self.rotation * info.bounds.min;
+        let max = self.rotation * info.bounds.max;
+
+        let min = min.map(|e| (e * 128.0) as i16) + self.position.cast().unwrap();
+        let max = max.map(|e| (e * 128.0) as i16) + self.position.cast().unwrap();
+
+        let points = [
+            Point3 {
+                x: min.x,
+                y: min.y,
+                z: min.z,
+            },
+            Point3 {
+                x: max.x,
+                y: min.y,
+                z: min.z,
+            },
+            Point3 {
+                x: max.x,
+                y: min.y,
+                z: max.z,
+            },
+            Point3 {
+                x: min.x,
+                y: min.y,
+                z: max.z,
+            },
+            Point3 {
+                x: min.x,
+                y: max.y,
+                z: min.z,
+            },
+            Point3 {
+                x: max.x,
+                y: max.y,
+                z: min.z,
+            },
+            Point3 {
+                x: max.x,
+                y: max.y,
+                z: max.z,
+            },
+            Point3 {
+                x: min.x,
+                y: max.y,
+                z: max.z,
+            },
+        ];
+
+        [
+            [1, 5, 6, 2],
+            [4, 0, 3, 7],
+            [5, 4, 7, 6],
+            [0, 1, 2, 3],
+            [3, 2, 6, 7],
+            [1, 0, 4, 5],
+        ]
+        .map(|f| {
+            [
+                tri(points[f[0]], points[f[1]], points[f[2]]),
+                tri(points[f[0]], points[f[2]], points[f[3]]),
+            ]
+        })
+    }
 }
 
 pub trait Movable: Sized {
@@ -782,4 +832,22 @@ impl Movable for Prop {
 
 fn prop_transform(position: Vector3<i32>, rotation: Quaternion<f32>) -> Matrix4<f32> {
     Matrix4::from_translation(position.map(|e| e as f32 / 128.0)) * Matrix4::from(rotation)
+}
+
+fn tri(a: Point3<i16>, b: Point3<i16>, c: Point3<i16>) -> LevelTriangle {
+    LevelTriangle {
+        kind: Surface::Default,
+        force: 0,
+        terrain: Terrain::Grass,
+        vertices: (a, b, c),
+    }
+}
+
+fn point(s: &Solid, i: usize) -> Point3<i16> {
+    let point = s.geometry.points[i].position;
+    Point3 {
+        x: point.x as i16,
+        y: point.y as i16,
+        z: point.z as i16,
+    }
 }
