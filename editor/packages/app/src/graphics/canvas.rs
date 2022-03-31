@@ -68,7 +68,7 @@ impl Canvas {
     }
 
     pub fn draw_mario(&mut self, mario: Rc<MarioMesh>) {
-        self.mario.insert(mario);
+        self.mario = Some(mario);
     }
 }
 

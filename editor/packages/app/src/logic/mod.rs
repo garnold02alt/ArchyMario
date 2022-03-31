@@ -8,7 +8,6 @@ mod scene;
 
 use asset::{GizmoID, PropID, TextureID};
 use cgmath::{vec2, vec3, Matrix4, Zero};
-use libsm64::{LevelTriangle, Point3, Surface, Terrain};
 use winit::event::{ElementState, MouseButton, VirtualKeyCode};
 
 use crate::{

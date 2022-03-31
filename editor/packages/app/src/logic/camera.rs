@@ -93,23 +93,13 @@ impl Camera {
             angle
         };
 
-        let mario_forward = vec3(angle.sin(), 0.0, angle.cos());
-
         self.rotation.x = -30.0;
         self.position = position + self.mario_disp;
 
         if still {
-            let mut rot_target = Quaternion::from_angle_y(Rad(angle - std::f32::consts::PI));
-            self.mario_quat = self.mario_quat.slerp(rot_target, 0.05);
+            let target = Quaternion::from_angle_y(Rad(angle - std::f32::consts::PI));
+            self.mario_quat = self.mario_quat.slerp(target, 0.05);
             self.mario_disp = self.mario_quat * Vector3::unit_z() * 4.0 + vec3(0.0, 4.0, 0.0);
-        }
-
-        fn lerp(a: f32, b: f32, t: f32) -> f32 {
-            a + (b - a) * t
-        }
-
-        fn lerp3(a: Vector3<f32>, b: Vector3<f32>, t: f32) -> Vector3<f32> {
-            a + (b - a) * t
         }
     }
 

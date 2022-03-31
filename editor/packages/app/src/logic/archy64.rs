@@ -1,15 +1,11 @@
 use std::rc::Rc;
 
-use asset::GizmoID;
-use cgmath::{vec2, vec3, InnerSpace, Matrix4, Vector2, Vector3, Zero};
+use cgmath::{vec2, vec3, InnerSpace, Vector2, Vector3, Zero};
 use instant::{Duration, Instant};
 use libsm64::{LevelTriangle, Mario, MarioInput, Sm64};
 use winit::event::VirtualKeyCode;
 
-use crate::graphics::{
-    structures::{GizmoInstance, MarioVertex},
-    Canvas, GizmoGroup, GizmoInstances, Graphics, MarioMesh, Share,
-};
+use crate::graphics::{structures::MarioVertex, Canvas, Graphics, MarioMesh};
 
 use super::{camera::Camera, input::Input};
 
