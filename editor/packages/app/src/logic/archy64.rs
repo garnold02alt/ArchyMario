@@ -107,6 +107,7 @@ impl Archy64 {
                                 position: vec3(v.position.x, v.position.y, v.position.z) / 128.0,
                                 normal: vec3(v.normal.x, v.normal.y, v.normal.z),
                                 texcoord: vec2(v.uv.x, v.uv.y),
+                                color: [v.color.r, v.color.g, v.color.b],
                             });
 
                             let t0 = i as u16 * 3;

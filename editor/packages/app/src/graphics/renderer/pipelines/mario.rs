@@ -23,6 +23,7 @@ pub fn pipeline(gpu: &Gpu, surface: &Surface) -> Pipeline {
                     0 => Float32x3, // Position
                     1 => Float32x3, // Normal
                     2 => Float32x2, // Texcoord
+                    3 => Float32x3, // Color
                 ],
             }],
             topology: PipelineTopology::Triangles,
