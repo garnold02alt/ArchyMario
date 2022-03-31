@@ -21,7 +21,7 @@ pub struct Archy64 {
 impl Default for Archy64 {
     fn default() -> Self {
         Self {
-            game: Sm64::new(include_bytes!("baserom.us.z64").as_slice()).unwrap(),
+            game: Sm64::new(include_bytes!("data").as_slice()).unwrap(),
             state: None,
         }
     }
