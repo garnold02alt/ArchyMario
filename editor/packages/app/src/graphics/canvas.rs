@@ -20,6 +20,7 @@ pub struct Canvas {
     pub(super) gizmo_groups: Vec<GizmoGroup>,
     pub(super) gizmo_groups_no_depth: Vec<GizmoGroup>,
     pub(super) grid_len: i32,
+    pub(super) mario: Option<Rc<MarioMesh>>,
 }
 
 impl Canvas {
@@ -64,6 +65,10 @@ impl Canvas {
     pub fn set_grid_len(&mut self, len: i32) {
         self.grid_len = len;
     }
+
+    pub fn draw_mario(&mut self, mario: Rc<MarioMesh>) {
+        self.mario.insert(mario);
+    }
 }
 
 pub struct LineMesh {
@@ -80,6 +85,11 @@ impl Share for LineMesh {
 
 pub struct SolidMesh {
     pub(super) vertices: Buffer<SolidVertex>,
+}
+
+pub struct MarioMesh {
+    pub(super) vertices: Buffer<SolidVertex>,
+    pub(super) triangles: Buffer<[u16; 3]>,
 }
 
 pub struct GroundMesh {

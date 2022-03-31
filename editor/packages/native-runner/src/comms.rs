@@ -58,6 +58,10 @@ impl AsyncStdin {
                             sender.send(FromHost::Button(button)).unwrap();
                             println!("[native-runner] pressed button {}", button);
                         }
+                        "mario" => {
+                            sender.send(FromHost::Mario).unwrap();
+                            println!("[native-runner] mario will become real in 3... 2... 1...");
+                        }
                         "exit" => {
                             println!("[native-runner] closed stdin");
                             break;

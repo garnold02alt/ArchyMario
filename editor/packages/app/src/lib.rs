@@ -189,6 +189,9 @@ pub fn run(init: Init) {
                         FromHost::LoadResource(resource) => {
                             loader.push_job(resource);
                         }
+                        FromHost::Mario => {
+                            logic.start_mario(&graphics);
+                        }
                     }
                 }
 
@@ -260,6 +263,7 @@ pub enum FromHost {
     Movement(f32, f32),
     LockPointer(bool),
     LoadResource(Resource),
+    Mario,
 }
 
 pub struct Resource {

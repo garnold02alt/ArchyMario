@@ -13,3 +13,4 @@ instant = "0"
 hex-literal = "0"
 gpu = { path = "../gpu" }
 asset = { path = "../asset" }
+libsm64 = { path = "../libsm64" }

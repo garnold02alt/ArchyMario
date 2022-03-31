@@ -105,6 +105,12 @@ impl Renderer {
                 }
             }
 
+            for mario in &canvas.mario {
+                let nodraw = self.resources.texture(TextureID(0)).unwrap();
+                pass.set_texture(1, nodraw);
+                pass.draw_triangles(&mario.vertices, &mario.triangles);
+            }
+
             pass.set_pipeline(&self.pipelines.ground);
             pass.set_uniform(2, &self.grid);
             for mesh in &canvas.ground_meshes {

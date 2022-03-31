@@ -76,6 +76,27 @@ impl Graphics {
         self.gpu.write_buffer(&mesh.vertices, vertices);
     }
 
+    pub fn create_mario_mesh(&self, num_verts: usize, num_tris: usize) -> MarioMesh {
+        MarioMesh {
+            vertices: self
+                .gpu
+                .create_buffer_uninit(num_verts, BufferUsages::VERTEX | BufferUsages::COPY_DST),
+            triangles: self
+                .gpu
+                .create_buffer_uninit(num_tris, BufferUsages::INDEX | BufferUsages::COPY_DST),
+        }
+    }
+
+    pub fn write_mario_mesh(
+        &self,
+        mesh: &MarioMesh,
+        vertices: &[SolidVertex],
+        triangles: &[[u16; 3]],
+    ) {
+        self.gpu.write_buffer(&mesh.vertices, vertices);
+        self.gpu.write_buffer(&mesh.triangles, triangles);
+    }
+
     pub fn create_ground_mesh(&self, descriptor: GroundMeshDescriptor) -> GroundMesh {
         GroundMesh {
             texture: descriptor.texture,

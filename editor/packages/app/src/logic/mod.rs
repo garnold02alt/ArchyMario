@@ -1,3 +1,4 @@
+mod archy64;
 mod camera;
 mod common;
 mod editor;
@@ -6,7 +7,8 @@ mod input;
 mod scene;
 
 use asset::{GizmoID, PropID, TextureID};
-use cgmath::{vec2, Matrix4, Zero};
+use cgmath::{vec2, vec3, Matrix4, Zero};
+use libsm64::{LevelTriangle, Point3, Surface, Terrain};
 use winit::event::{ElementState, MouseButton, VirtualKeyCode};
 
 use crate::{
@@ -15,7 +17,7 @@ use crate::{
     Host, ToHost,
 };
 
-use self::{camera::Camera, editor::Editor, input::Input, scene::Scene};
+use self::{archy64::Archy64, camera::Camera, editor::Editor, input::Input, scene::Scene};
 
 pub use elements::ElementKind;
 
@@ -25,6 +27,7 @@ pub struct Logic {
     scene: Scene,
     editor: Editor,
     dummy: GizmoInstances,
+    archy64: Archy64,
 }
 
 impl Logic {
@@ -59,6 +62,7 @@ impl Logic {
             scene,
             editor,
             dummy,
+            archy64: Archy64::default(),
         }
     }
 
@@ -72,6 +76,12 @@ impl Logic {
             scene: &mut self.scene,
             delta: ctx.delta,
         });
+
+        self.archy64.process(archy64::Context {
+            input: &mut self.input,
+            graphics: ctx.graphics,
+        });
+
         self.input.process();
     }
 
@@ -142,10 +152,37 @@ impl Logic {
         );
     }
 
+    pub fn start_mario(&mut self, graphics: &Graphics) {
+        self.archy64.init(
+            graphics,
+            &[
+                tri(point(0, 0, 0), point(1000, 0, 1000), point(1000, 0, 0)),
+                tri(point(0, 0, 0), point(0, 0, 1000), point(1000, 0, 1000)),
+            ],
+            vec3(500, 100, 500),
+        );
+
+        fn tri(a: Point3<i16>, b: Point3<i16>, c: Point3<i16>) -> LevelTriangle {
+            LevelTriangle {
+                kind: Surface::Default,
+                force: 0,
+                terrain: Terrain::Grass,
+                vertices: (a, b, c),
+            }
+        }
+
+        fn point(x: i16, y: i16, z: i16) -> Point3<i16> {
+            Point3 { x, y, z }
+        }
+    }
+
     pub fn render(&self, canvas: &mut Canvas) {
         canvas.set_camera_matrices(self.camera.matrices());
+
         self.scene.render(canvas, self.editor.mode());
         self.editor.render(canvas);
+        self.archy64.render(canvas);
+
         canvas.draw_gizmos(GizmoGroup {
             gizmo: GizmoID(0),
             instances: self.dummy.share(),
