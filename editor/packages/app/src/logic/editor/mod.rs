@@ -47,6 +47,10 @@ impl Editor {
     }
 
     pub fn process(&mut self, ctx: Context) {
+        if ctx.mario {
+            return;
+        }
+
         self.old_tool = None;
 
         let new = self.tool.process(tools::Context {
@@ -141,6 +145,7 @@ pub struct Context<'a> {
     pub camera: &'a mut Camera,
     pub scene: &'a mut Scene,
     pub delta: f32,
+    pub mario: bool,
 }
 
 struct Ground {

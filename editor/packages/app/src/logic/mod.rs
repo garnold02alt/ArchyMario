@@ -44,6 +44,7 @@ impl Logic {
             camera: &mut camera,
             scene: &mut scene,
             delta: ctx.delta,
+            mario: false,
         });
 
         // HACK: Drawing an invisible gizmo at all times prevents the weird whiteout bug on web
@@ -75,11 +76,13 @@ impl Logic {
             camera: &mut self.camera,
             scene: &mut self.scene,
             delta: ctx.delta,
+            mario: self.archy64.initialized(),
         });
 
         self.archy64.process(archy64::Context {
             input: &mut self.input,
             graphics: ctx.graphics,
+            camera: &mut self.camera,
         });
 
         self.input.process();
@@ -147,6 +150,7 @@ impl Logic {
                 camera: &mut self.camera,
                 scene: &mut self.scene,
                 delta: ctx.delta,
+                mario: self.archy64.initialized(),
             },
             mode,
         );

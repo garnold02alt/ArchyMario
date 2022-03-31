@@ -7,7 +7,7 @@ use winit::event::VirtualKeyCode;
 
 use crate::graphics::{structures::MarioVertex, Canvas, Graphics, MarioMesh};
 
-use super::input::Input;
+use super::{camera::Camera, input::Input};
 
 pub struct Archy64 {
     game: Sm64,
@@ -55,8 +55,8 @@ impl Archy64 {
                 }
 
                 let button_a = ctx.input.is_key_down(VirtualKeyCode::Y);
-                let button_b = ctx.input.is_key_down(VirtualKeyCode::X);
-                let button_z = ctx.input.is_key_down(VirtualKeyCode::C);
+                let button_b = ctx.input.is_key_down(VirtualKeyCode::C);
+                let button_z = ctx.input.is_key_down(VirtualKeyCode::X);
 
                 let input = MarioInput {
                     stick_x: stick.x,
@@ -67,7 +67,17 @@ impl Archy64 {
                     ..Default::default()
                 };
 
-                state.mario.tick(input);
+                let mario_state = state.mario.tick(input);
+
+                {
+                    let position = vec3(
+                        mario_state.position.x / 128.0,
+                        mario_state.position.y / 128.0,
+                        mario_state.position.z / 128.0,
+                    );
+                    let angle = mario_state.face_angle;
+                    ctx.camera.mario_control(position, angle);
+                }
 
                 {
                     let geometry = state.mario.geometry();
@@ -100,11 +110,16 @@ impl Archy64 {
             canvas.draw_mario(state.mesh.clone());
         }
     }
+
+    pub fn initialized(&self) -> bool {
+        self.state.is_some()
+    }
 }
 
 pub struct Context<'a> {
     pub input: &'a Input,
     pub graphics: &'a Graphics,
+    pub camera: &'a mut Camera,
 }
 
 struct State {

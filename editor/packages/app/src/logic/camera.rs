@@ -82,6 +82,13 @@ impl Camera {
         self.speed -= 1;
     }
 
+    pub fn mario_control(&mut self, position: Vector3<f32>, angle: f32) {
+        let disp = Vector3::new(0.0, 4.0, 5.0);
+        self.position = position + disp;
+        self.rotation.x = -30.0;
+        self.rotation.y = 0.0;
+    }
+
     pub fn screen_ray(&self, coords: Vector2<f32>) -> Ray {
         let coords = (vec2(
             coords.x / self.viewport_size.x,
