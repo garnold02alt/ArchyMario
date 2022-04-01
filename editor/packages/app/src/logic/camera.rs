@@ -112,8 +112,8 @@ impl Camera {
         }
 
         let ray = Ray {
-            start: position + Vector3::unit_y(),
-            end: position + self.mario_disp + Vector3::unit_y(),
+            start: position + Vector3::unit_y() * 1.5,
+            end: position + Vector3::unit_y() * 1.5 + self.mario_disp,
         };
 
         let hit = scene.raycast_simple(&self, prop_infos, ray);

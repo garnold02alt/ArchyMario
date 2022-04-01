@@ -631,55 +631,60 @@ impl Prop {
 
     pub fn level_triangles(&self, info: &PropInfoContainer) -> [[LevelTriangle; 2]; 6] {
         let info = info.get(self.asset).unwrap();
-
-        let min = self.rotation * info.bounds.min;
-        let max = self.rotation * info.bounds.max;
-
-        let min = min.map(|e| (e * 128.0) as i16) + self.position.cast().unwrap();
-        let max = max.map(|e| (e * 128.0) as i16) + self.position.cast().unwrap();
+        let pos = self.position.map(|e| e as f32 / 128.0);
+        let min = info.bounds.min;
+        let max = info.bounds.max;
 
         let points = [
-            Point3 {
+            Vector3 {
                 x: min.x,
                 y: min.y,
                 z: min.z,
             },
-            Point3 {
+            Vector3 {
                 x: max.x,
                 y: min.y,
                 z: min.z,
             },
-            Point3 {
+            Vector3 {
                 x: max.x,
                 y: min.y,
                 z: max.z,
             },
-            Point3 {
+            Vector3 {
                 x: min.x,
                 y: min.y,
                 z: max.z,
             },
-            Point3 {
+            Vector3 {
                 x: min.x,
                 y: max.y,
                 z: min.z,
             },
-            Point3 {
+            Vector3 {
                 x: max.x,
                 y: max.y,
                 z: min.z,
             },
-            Point3 {
+            Vector3 {
                 x: max.x,
                 y: max.y,
                 z: max.z,
             },
-            Point3 {
+            Vector3 {
                 x: min.x,
                 y: max.y,
                 z: max.z,
             },
-        ];
+        ]
+        .map(|p| {
+            let p = (self.rotation * p + pos).map(|e| (e * 128.0) as i16);
+            Point3 {
+                x: p.x,
+                y: p.y,
+                z: p.z,
+            }
+        });
 
         [
             [1, 5, 6, 2],
