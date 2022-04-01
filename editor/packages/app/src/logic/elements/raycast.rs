@@ -10,8 +10,8 @@ use crate::{
 
 use super::{FaceLocator, PointLocator, Prop, Solid};
 
-pub fn raycast(input: RaycastInput) -> RaycastHit {
-    let ray = input.camera.screen_ray(input.screen_pos);
+pub fn raycast2(input: RaycastInput2) -> RaycastHit {
+    let ray = input.ray;
 
     let mut hit_faces = raycast_faces(input.solids, &ray);
     let mut hit_props = raycast_props(input.props, input.prop_infos, &ray);
@@ -136,6 +136,20 @@ pub fn raycast(input: RaycastInput) -> RaycastHit {
     }
 }
 
+pub fn raycast(input: RaycastInput) -> RaycastHit {
+    let ray = input.camera.screen_ray(input.screen_pos);
+    let input = RaycastInput2 {
+        solids: input.solids,
+        props: input.props,
+        camera: input.camera,
+        prop_infos: input.prop_infos,
+        ray,
+        screen_pos: input.screen_pos,
+    };
+
+    raycast2(input)
+}
+
 fn raycast_faces(solids: &HashMap<usize, Solid>, ray: &Ray) -> Vec<HitFace> {
     let mut hit_faces = Vec::new();
 
@@ -198,6 +212,15 @@ pub struct RaycastInput<'a> {
     pub props: &'a HashMap<usize, Prop>,
     pub camera: &'a Camera,
     pub prop_infos: &'a PropInfoContainer,
+    pub screen_pos: Vector2<f32>,
+}
+
+pub struct RaycastInput2<'a> {
+    pub solids: &'a HashMap<usize, Solid>,
+    pub props: &'a HashMap<usize, Prop>,
+    pub camera: &'a Camera,
+    pub prop_infos: &'a PropInfoContainer,
+    pub ray: Ray,
     pub screen_pos: Vector2<f32>,
 }
 

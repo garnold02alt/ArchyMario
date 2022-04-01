@@ -7,7 +7,7 @@ use libsm64::LevelTriangle;
 use crate::{
     data::PropInfoContainer,
     graphics::{Canvas, Graphics},
-    math::Snap,
+    math::{Ray, Snap},
 };
 
 use super::{
@@ -15,7 +15,7 @@ use super::{
     common::Axis,
     elements::{
         self, ElementKind, FaceLocator, Movable, PointLocator, Prop, RaycastHit, RaycastInput,
-        Solid,
+        RaycastInput2, Solid,
     },
 };
 
@@ -64,6 +64,22 @@ impl Scene {
             camera,
             prop_infos,
             screen_pos,
+        })
+    }
+
+    pub fn raycast_simple(
+        &self,
+        camera: &Camera,
+        prop_infos: &PropInfoContainer,
+        ray: Ray,
+    ) -> RaycastHit {
+        elements::raycast2(RaycastInput2 {
+            solids: &self.solids,
+            props: &self.props,
+            camera,
+            prop_infos,
+            ray,
+            screen_pos: Vector2::zero(),
         })
     }
 

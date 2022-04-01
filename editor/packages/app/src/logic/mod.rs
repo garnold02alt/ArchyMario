@@ -82,6 +82,8 @@ impl Logic {
             input: &mut self.input,
             graphics: ctx.graphics,
             camera: &mut self.camera,
+            scene: &self.scene,
+            prop_infos: ctx.prop_infos,
         });
 
         self.input.process();

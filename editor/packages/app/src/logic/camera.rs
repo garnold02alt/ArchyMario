@@ -4,7 +4,9 @@ use cgmath::{
     Transform, Vector2, Vector3, Vector4, Zero,
 };
 
-use crate::{graphics::structures::CameraMatrices, math::Ray};
+use crate::{data::PropInfoContainer, graphics::structures::CameraMatrices, math::Ray};
+
+use super::scene::Scene;
 
 pub struct Camera {
     position: Vector3<f32>,
@@ -86,7 +88,14 @@ impl Camera {
         self.speed -= 1;
     }
 
-    pub fn mario_control(&mut self, position: Vector3<f32>, angle: f32, still: bool) {
+    pub fn mario_control(
+        &mut self,
+        position: Vector3<f32>,
+        angle: f32,
+        still: bool,
+        scene: &Scene,
+        prop_infos: &PropInfoContainer,
+    ) {
         let angle = if angle < 0.0 {
             angle + std::f32::consts::TAU
         } else {
@@ -100,6 +109,16 @@ impl Camera {
             let target = Quaternion::from_angle_y(Rad(angle - std::f32::consts::PI));
             self.mario_quat = self.mario_quat.slerp(target, 0.05);
             self.mario_disp = self.mario_quat * Vector3::unit_z() * 4.0 + vec3(0.0, 4.0, 0.0);
+        }
+
+        let ray = Ray {
+            start: position + Vector3::unit_y(),
+            end: position + self.mario_disp + Vector3::unit_y(),
+        };
+
+        let hit = scene.raycast_simple(&self, prop_infos, ray);
+        if let Some(endpoint) = hit.endpoint {
+            self.position = endpoint.point;
         }
     }
 

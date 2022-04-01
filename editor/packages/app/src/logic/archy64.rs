@@ -5,9 +5,12 @@ use instant::{Duration, Instant};
 use libsm64::{LevelTriangle, Mario, MarioInput, Sm64};
 use winit::event::VirtualKeyCode;
 
-use crate::graphics::{structures::MarioVertex, Canvas, Graphics, MarioMesh};
+use crate::{
+    data::PropInfoContainer,
+    graphics::{structures::MarioVertex, Canvas, Graphics, MarioMesh},
+};
 
-use super::{camera::Camera, input::Input};
+use super::{camera::Camera, input::Input, scene::Scene};
 
 pub struct Archy64 {
     game: Sm64,
@@ -88,7 +91,13 @@ impl Archy64 {
 
                     let angle = mario_state.face_angle;
                     let limit = velocity.magnitude2().max(stick.magnitude2());
-                    ctx.camera.mario_control(position, angle, limit < 0.01);
+                    ctx.camera.mario_control(
+                        position,
+                        angle,
+                        limit < 0.01,
+                        ctx.scene,
+                        ctx.prop_infos,
+                    );
                 }
 
                 {
@@ -133,6 +142,8 @@ pub struct Context<'a> {
     pub input: &'a Input,
     pub graphics: &'a Graphics,
     pub camera: &'a mut Camera,
+    pub scene: &'a Scene,
+    pub prop_infos: &'a PropInfoContainer,
 }
 
 struct State {
