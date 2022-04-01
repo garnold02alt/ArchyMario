@@ -160,6 +160,13 @@ impl Logic {
     pub fn start_mario(&mut self, graphics: &Graphics, info: &PropInfoContainer) {
         self.archy64
             .init(graphics, &self.scene.level_geometry(info), vec3(0, 512, 0));
+
+        if self.archy64.initialized() {
+            println!("mario will become real in 3... 2... 1...");
+        } else {
+            println!("mario is no more.")
+        }
+
         self.camera.reset();
     }
 

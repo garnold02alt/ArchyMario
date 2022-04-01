@@ -28,8 +28,12 @@ impl Default for Archy64 {
 
 impl Archy64 {
     pub fn init(&mut self, graphics: &Graphics, geometry: &[LevelTriangle], spawn: Vector3<i16>) {
-        self.game.load_level_geometry(geometry);
-        self.state = Some(State::new(graphics, &self.game, spawn));
+        if self.state.is_none() {
+            self.game.load_level_geometry(geometry);
+            self.state = Some(State::new(graphics, &self.game, spawn));
+        } else {
+            self.state = None;
+        }
     }
 
     pub fn process(&mut self, ctx: Context) {

@@ -60,7 +60,6 @@ impl AsyncStdin {
                         }
                         "mario" => {
                             sender.send(FromHost::Mario).unwrap();
-                            println!("[native-runner] mario will become real in 3... 2... 1...");
                         }
                         "exit" => {
                             println!("[native-runner] closed stdin");
